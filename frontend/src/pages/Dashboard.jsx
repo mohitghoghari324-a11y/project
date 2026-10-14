@@ -75,35 +75,42 @@ export default function Dashboard() {
   const filteredTasks = tasks.filter((task) => filter === 'All' || task.status === filter);
 
   const getBadgeStyle = (status) => {
-    let base = { display: 'inline-block', padding: '5px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: '600' };
-    if (status === 'Completed') return { ...base, backgroundColor: 'rgba(16, 185, 129, 0.15)', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.2)' };
-    if (status === 'In Progress') return { ...base, backgroundColor: 'rgba(245, 158, 11, 0.15)', color: '#fbbf24', border: '1px solid rgba(245, 158, 11, 0.2)' };
-    return { ...base, backgroundColor: 'rgba(148, 163, 184, 0.15)', color: '#cbd5e1', border: '1px solid rgba(148, 163, 184, 0.2)' };
+    switch (status) {
+      case 'Completed':
+        return 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20';
+      case 'In Progress':
+        return 'bg-amber-500/15 text-amber-400 border border-amber-500/20';
+      default:
+        return 'bg-slate-500/15 text-slate-300 border border-slate-500/20';
+    }
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)', padding: '40px 20px', fontFamily: 'Inter, system-ui, sans-serif', color: '#fff', boxSizing: 'border-box' }}>
-      <div style={{ maxWidth: '850px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '25px' }}>
+    <div className="min-h-screen bg-slate-950 bg-gradient-to-br from-slate-900 via-slate-950 to-indigo-950 px-4 py-8 text-slate-100 font-sans">
+      <div className="max-w-4xl mx-auto space-y-8">
         
         {/* Header Section */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255, 255, 255, 0.08)', padding: '24px 30px', borderRadius: '20px', boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }}>
+        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white/[0.03] backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl gap-4">
           <div>
-            <h1 style={{ margin: 0, fontSize: '24px', fontWeight: '700', letterSpacing: '-0.5px' }}>Task Manager Workspace</h1>
-            <p style={{ margin: '4px 0 0 0', color: '#94a3b8', fontSize: '14px' }}>Manage, prioritize, and track your active workflows.</p>
+            <h1 className="text-2xl font-bold tracking-tight text-white">Task Manager Workspace</h1>
+            <p className="text-slate-400 text-sm mt-1">Manage, prioritize, and track your active workflows.</p>
           </div>
-          <button onClick={() => { localStorage.clear(); navigate('/login'); }} style={{ padding: '10px 18px', backgroundColor: 'rgba(239, 68, 68, 0.15)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '12px', cursor: 'pointer', fontWeight: '600', fontSize: '14px' }}>
+          <button
+            onClick={() => { localStorage.clear(); navigate('/login'); }}
+            className="px-4 py-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 rounded-xl text-sm font-medium transition-colors cursor-pointer"
+          >
             Logout
           </button>
-        </div>
+        </header>
 
         {/* Task Form */}
-        <div style={{ background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255, 255, 255, 0.08)', padding: '30px', borderRadius: '20px', boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }}>
-          <h3 style={{ margin: '0 0 20px 0', fontSize: '18px', fontWeight: '600' }}>
+        <section className="bg-white/[0.03] backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl">
+          <h3 className="text-lg font-semibold mb-4 text-white">
             {editingId ? 'Edit Existing Task' : 'Create New Task'}
           </h3>
           
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '15px' }}>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <input
                 type="text"
                 name="title"
@@ -111,13 +118,13 @@ export default function Dashboard() {
                 value={formData.title}
                 onChange={handleChange}
                 required
-                style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.1)', background: 'rgba(15, 23, 42, 0.6)', color: '#fff', outline: 'none', boxSizing: 'border-box', fontSize: '14px' }}
+                className="sm:col-span-2 px-4 py-2.5 rounded-xl bg-slate-900/60 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 text-sm"
               />
               <select
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
-                style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.1)', background: '#0f172a', color: '#fff', outline: 'none', boxSizing: 'border-box', fontSize: '14px' }}
+                className="px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:border-indigo-500 text-sm"
               >
                 {STATUS_OPTIONS.map((opt) => (
                   <option key={opt} value={opt}>{opt}</option>
@@ -131,14 +138,14 @@ export default function Dashboard() {
               value={formData.description}
               onChange={handleChange}
               rows={3}
-              style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.1)', background: 'rgba(15, 23, 42, 0.6)', color: '#fff', outline: 'none', boxSizing: 'border-box', fontSize: '14px', resize: 'none' }}
+              className="w-full px-4 py-2.5 rounded-xl bg-slate-900/60 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 text-sm resize-none"
             />
             
-            <div style={{ display: 'flex', gap: '10px', marginTop: '5px' }}>
+            <div className="flex items-center gap-3 pt-2">
               <button
                 type="submit"
                 disabled={loading}
-                style={{ padding: '12px 24px', background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)', color: 'white', border: 'none', borderRadius: '12px', fontWeight: '600', cursor: 'pointer', fontSize: '14px', boxShadow: '0 10px 20px rgba(79, 70, 229, 0.3)' }}
+                className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-xl text-sm transition-all shadow-lg shadow-indigo-600/20 cursor-pointer disabled:opacity-50"
               >
                 {loading ? 'Saving...' : editingId ? 'Update Task' : 'Add Task'}
               </button>
@@ -146,24 +153,24 @@ export default function Dashboard() {
                 <button
                   type="button"
                   onClick={resetForm}
-                  style={{ padding: '12px 24px', backgroundColor: 'rgba(255, 255, 255, 0.08)', color: '#cbd5e1', border: 'none', borderRadius: '12px', fontWeight: '600', cursor: 'pointer', fontSize: '14px' }}
+                  className="px-5 py-2.5 bg-white/5 hover:bg-white/10 text-slate-300 font-medium rounded-xl text-sm transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
               )}
             </div>
           </form>
-        </div>
+        </section>
 
-        {/* Filter Bar */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 5px' }}>
-          <h3 style={{ margin: 0, fontSize: '20px', fontWeight: '700' }}>Tasks Overview</h3>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '14px', color: '#94a3b8' }}>Filter by:</span>
+        {/* Controls / Filter Bar */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 px-1">
+          <h3 className="text-xl font-bold text-white">Tasks Overview</h3>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-slate-400">Filter by:</span>
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              style={{ padding: '8px 14px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.1)', background: '#0f172a', color: '#fff', outline: 'none', fontSize: '14px' }}
+              className="px-3 py-1.5 rounded-xl bg-slate-900 border border-white/10 text-white text-sm focus:outline-none focus:border-indigo-500"
             >
               <option value="All">All Tasks</option>
               {STATUS_OPTIONS.map((opt) => (
@@ -173,30 +180,41 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Tasks List Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '20px' }}>
+        {/* Task Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {filteredTasks.length === 0 ? (
-            <div style={{ gridColumn: '1 / -1', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', padding: '40px', textAlign: 'center', borderRadius: '20px', color: '#94a3b8', fontSize: '14px' }}>
+            <div className="col-span-full bg-white/[0.03] border border-white/10 p-12 text-center rounded-2xl text-slate-400 text-sm">
               No tasks found. Get started by creating one above!
             </div>
           ) : (
-            filteredTasks.map((task) => (
-              <div key={task.id} style={{ background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255, 255, 255, 0.08)', padding: '22px', borderRadius: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <div>
-                    <span style={getBadgeStyle(task.status)}>{task.status}</span>
+            filteredTasks.hash ? null : filteredTasks.map((task) => (
+              <div
+                key={task.id}
+                className="bg-white/[0.03] backdrop-blur-xl border border-white/10 p-5 rounded-2xl flex flex-col justify-between hover:border-white/20 transition-all"
+              >
+                <div className="space-y-3">
+                  <div className="flex justify-between items-start">
+                    <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${getBadgeStyle(task.status)}`}>
+                      {task.status}
+                    </span>
                   </div>
-                  <h4 style={{ margin: 0, fontSize: '16px', fontWeight: '700', color: '#f8fafc' }}>{task.title}</h4>
-                  <p style={{ margin: 0, color: '#94a3b8', fontSize: '13px', lineHeight: '1.5' }}>
+                  <h4 className="text-base font-bold text-slate-100">{task.title}</h4>
+                  <p className="text-slate-400 text-sm leading-relaxed line-clamp-3">
                     {task.description || 'No description provided.'}
                   </p>
                 </div>
                 
-                <div style={{ display: 'flex', gap: '10px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', marginTop: '20px', paddingTop: '15px' }}>
-                  <button onClick={() => handleEditClick(task)} style={{ flex: 1, padding: '8px', backgroundColor: 'rgba(59, 130, 246, 0.15)', color: '#60a5fa', border: '1px solid rgba(59, 130, 246, 0.3)', borderRadius: '10px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}>
+                <div className="flex items-center gap-2 pt-4 mt-4 border-t border-white/10">
+                  <button
+                    onClick={() => handleEditClick(task)}
+                    className="flex-1 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
+                  >
                     Edit
                   </button>
-                  <button onClick={() => handleDeleteClick(task.id)} style={{ flex: 1, padding: '8px', backgroundColor: 'rgba(239, 68, 68, 0.15)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '10px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}>
+                  <button
+                    onClick={() => handleDeleteClick(task.id)}
+                    className="flex-1 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
+                  >
                     Delete
                   </button>
                 </div>
