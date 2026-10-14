@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'http://localhost:5000/api', // Backend local URL (Deployment vakhte live URL muki devu)
+  baseURL: 'https://task-management-1-efzt.onrender.com', // Backend local URL (Deployment vakhte live URL muki devu)
 });
 
 // Request interceptor to add JWT token
