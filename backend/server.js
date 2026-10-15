@@ -8,24 +8,38 @@ const db = require('./db');
 const verifyToken = require('./middleware/authMiddleware');
 
 const app = express();
+
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
-app.use(cors());
+
+app.get('/', (req, res) => {
+  res.send('Server running successfully...');
+});
 
 // 1. Register API
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { username, password } = req.body;
-    if (!username || !password) return res.status(400).json({ message: 'Provide username and password' });
+    if (!username || !password) {
+      return res.status(400).json({ message: 'Provide username and password' });
+    }
 
-    const [existing] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
-    if (existing.length > 0) return res.status(400).json({ message: 'Username already exists' });
+    const [existing] = await db.query('SELECT * FROM users WHERE username = ?', [username.trim()]);
+    if (existing.length > 0) {
+      return res.status(400).json({ message: 'Username already exists' });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    await db.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, hashedPassword]);
+    await db.query('INSERT INTO users (username, password) VALUES (?, ?)', [username.trim(), hashedPassword]);
     
     res.status(201).json({ message: 'User registered successfully' });
   } catch (err) {
-    console.error('REGISTER ERROR:', err); // Terminal ma error print thase
+    console.error('REGISTER ERROR:', err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
@@ -34,17 +48,25 @@ app.post('/api/auth/register', async (req, res) => {
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { username, password } = req.body;
-    const [users] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
-    if (users.length === 0) return res.status(400).json({ message: 'Invalid credentials' });
+    if (!username || !password) {
+      return res.status(400).json({ message: 'Provide username and password' });
+    }
+
+    const [users] = await db.query('SELECT * FROM users WHERE username = ?', [username.trim()]);
+    if (users.length === 0) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
 
     const user = users[0];
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || 'defaultsecret', { expiresIn: '1d' });
     res.json({ token, message: 'Login successful' });
   } catch (err) {
-    console.error('LOGIN ERROR:', err); // Terminal ma error print thase
+    console.error('LOGIN ERROR:', err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
@@ -52,7 +74,7 @@ app.post('/api/auth/login', async (req, res) => {
 // 3. Get Tasks API (Protected)
 app.get('/api/tasks', verifyToken, async (req, res) => {
   try {
-    const [tasks] = await db.query('SELECT * FROM tasks WHERE user_id = ?', [req.user.id]);
+    const [tasks] = await db.query('SELECT * FROM tasks WHERE user_id = ? ORDER BY created_at DESC', [req.user.id]);
     res.json(tasks);
   } catch (err) {
     console.error('GET TASKS ERROR:', err);
@@ -113,10 +135,7 @@ app.delete('/api/tasks/:id', verifyToken, async (req, res) => {
   }
 });
 
-// Server Start
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-const [existing] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
