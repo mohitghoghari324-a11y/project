@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'http://localhost:5000/api', // Render ni live URL set kari didhi
+  baseURL: 'https://task-management-backend-i4i8.onrender.com',
 });
 
 // Request interceptor to add JWT token
