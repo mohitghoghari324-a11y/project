@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'https://task-management-backend-i4i8.onrender.com',
+  baseURL: 'https://task-management-backend-i4i8.onrender.com/api', // Render ni live URL
 });
 
 // Request interceptor to add JWT token
