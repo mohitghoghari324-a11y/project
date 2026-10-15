@@ -25,6 +25,7 @@ app.post('/api/auth/register', async (req, res) => {
     
     res.status(201).json({ message: 'User registered successfully' });
   } catch (err) {
+    console.error('REGISTER ERROR:', err); // Terminal ma error print thase
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
@@ -43,6 +44,7 @@ app.post('/api/auth/login', async (req, res) => {
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
     res.json({ token, message: 'Login successful' });
   } catch (err) {
+    console.error('LOGIN ERROR:', err); // Terminal ma error print thase
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
@@ -53,6 +55,7 @@ app.get('/api/tasks', verifyToken, async (req, res) => {
     const [tasks] = await db.query('SELECT * FROM tasks WHERE user_id = ?', [req.user.id]);
     res.json(tasks);
   } catch (err) {
+    console.error('GET TASKS ERROR:', err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
@@ -69,6 +72,7 @@ app.post('/api/tasks', verifyToken, async (req, res) => {
     );
     res.status(201).json({ message: 'Task created successfully' });
   } catch (err) {
+    console.error('CREATE TASK ERROR:', err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
@@ -88,6 +92,7 @@ app.put('/api/tasks/:id', verifyToken, async (req, res) => {
     );
     res.json({ message: 'Task updated successfully' });
   } catch (err) {
+    console.error('UPDATE TASK ERROR:', err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
@@ -103,6 +108,7 @@ app.delete('/api/tasks/:id', verifyToken, async (req, res) => {
     await db.query('DELETE FROM tasks WHERE id = ?', [id]);
     res.json({ message: 'Task deleted successfully' });
   } catch (err) {
+    console.error('DELETE TASK ERROR:', err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
@@ -111,4 +117,4 @@ app.delete('/api/tasks/:id', verifyToken, async (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-}); 
+});

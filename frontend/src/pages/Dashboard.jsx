@@ -74,43 +74,32 @@ export default function Dashboard() {
 
   const filteredTasks = tasks.filter((task) => filter === 'All' || task.status === filter);
 
-  const getBadgeStyle = (status) => {
-    switch (status) {
-      case 'Completed':
-        return 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20';
-      case 'In Progress':
-        return 'bg-amber-500/15 text-amber-400 border border-amber-500/20';
-      default:
-        return 'bg-slate-500/15 text-slate-300 border border-slate-500/20';
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-slate-950 bg-gradient-to-br from-slate-900 via-slate-950 to-indigo-950 px-4 py-8 text-slate-100 font-sans">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <div style={{ backgroundColor: '#0f172a', color: '#f8fafc', minHeight: '100vh', padding: '30px 20px', fontFamily: 'Segoe UI, Tahoma, sans-serif' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
         
         {/* Header Section */}
-        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white/[0.03] backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl gap-4">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#1e293b', padding: '20px 24px', borderRadius: '16px', border: '1px solid #334155', marginBottom: '24px' }}>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-white">Task Manager Workspace</h1>
-            <p className="text-slate-400 text-sm mt-1">Manage, prioritize, and track your active workflows.</p>
+            <h1 style={{ fontSize: '1.6rem', fontWeight: 'bold', background: 'linear-gradient(to right, #38bdf8, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>Task Manager Workspace</h1>
+            <p style={{ color: '#94a3b8', fontSize: '0.9rem', margin: '4px 0 0 0' }}>Manage, prioritize, and track your active workflows.</p>
           </div>
           <button
             onClick={() => { localStorage.clear(); navigate('/login'); }}
-            className="px-4 py-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 rounded-xl text-sm font-medium transition-colors cursor-pointer"
+            style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '8px 16px', borderRadius: '10px', cursor: 'pointer', fontWeight: '600', fontSize: '0.9rem' }}
           >
             Logout
           </button>
-        </header>
+        </div>
 
         {/* Task Form */}
-        <section className="bg-white/[0.03] backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl">
-          <h3 className="text-lg font-semibold mb-4 text-white">
+        <div style={{ background: '#1e293b', padding: '24px', borderRadius: '16px', border: '1px solid #334155', marginBottom: '30px' }}>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '16px', color: '#f8fafc' }}>
             {editingId ? 'Edit Existing Task' : 'Create New Task'}
           </h3>
           
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px', background: 'transparent', padding: 0, border: 'none', margin: 0 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '14px' }}>
               <input
                 type="text"
                 name="title"
@@ -118,16 +107,16 @@ export default function Dashboard() {
                 value={formData.title}
                 onChange={handleChange}
                 required
-                className="sm:col-span-2 px-4 py-2.5 rounded-xl bg-slate-900/60 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 text-sm"
+                style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', background: '#0f172a', border: '1px solid #475569', color: '#fff', fontSize: '0.95rem', outline: 'none' }}
               />
               <select
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
-                className="px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:border-indigo-500 text-sm"
+                style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', background: '#0f172a', border: '1px solid #475569', color: '#fff', fontSize: '0.95rem', outline: 'none', cursor: 'pointer' }}
               >
                 {STATUS_OPTIONS.map((opt) => (
-                  <option key={opt} value={opt}>{opt}</option>
+                  <option key={opt} value={opt} style={{ background: '#1e293b', color: '#fff' }}>{opt}</option>
                 ))}
               </select>
             </div>
@@ -138,14 +127,14 @@ export default function Dashboard() {
               value={formData.description}
               onChange={handleChange}
               rows={3}
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-900/60 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 text-sm resize-none"
+              style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', background: '#0f172a', border: '1px solid #475569', color: '#fff', fontSize: '0.95rem', outline: 'none', resize: 'vertical' }}
             />
             
-            <div className="flex items-center gap-3 pt-2">
+            <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
               <button
                 type="submit"
                 disabled={loading}
-                className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-xl text-sm transition-all shadow-lg shadow-indigo-600/20 cursor-pointer disabled:opacity-50"
+                style={{ background: 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '10px', fontWeight: '600', cursor: 'pointer', fontSize: '0.95rem' }}
               >
                 {loading ? 'Saving...' : editingId ? 'Update Task' : 'Add Task'}
               </button>
@@ -153,67 +142,69 @@ export default function Dashboard() {
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="px-5 py-2.5 bg-white/5 hover:bg-white/10 text-slate-300 font-medium rounded-xl text-sm transition-colors cursor-pointer"
+                  style={{ background: '#334155', color: '#cbd5e1', border: 'none', padding: '10px 20px', borderRadius: '10px', fontWeight: '600', cursor: 'pointer', fontSize: '0.95rem' }}
                 >
                   Cancel
                 </button>
               )}
             </div>
           </form>
-        </section>
+        </div>
 
-        {/* Controls / Filter Bar */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 px-1">
-          <h3 className="text-xl font-bold text-white">Tasks Overview</h3>
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-slate-400">Filter by:</span>
+        {/* Filter Section */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', margin: 0, color: '#f8fafc' }}>Tasks Overview</h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ fontSize: '0.9rem', color: '#94a3b8' }}>Filter by:</span>
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="px-3 py-1.5 rounded-xl bg-slate-900 border border-white/10 text-white text-sm focus:outline-none focus:border-indigo-500"
+              style={{ padding: '8px 12px', borderRadius: '10px', background: '#1e293b', border: '1px solid #334155', color: '#fff', fontSize: '0.9rem', outline: 'none', cursor: 'pointer' }}
             >
               <option value="All">All Tasks</option>
               {STATUS_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>{opt}</option>
+                <option key={opt} value={opt} style={{ background: '#1e293b', color: '#fff' }}>{opt}</option>
               ))}
             </select>
           </div>
         </div>
 
         {/* Task Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '14px' }}>
           {filteredTasks.length === 0 ? (
-            <div className="col-span-full bg-white/[0.03] border border-white/10 p-12 text-center rounded-2xl text-slate-400 text-sm">
+            <div style={{ background: '#1e293b', border: '1px solid #334155', padding: '40px', textAlign: 'center', borderRadius: '16px', color: '#94a3b8', fontStyle: 'italic' }}>
               No tasks found. Get started by creating one above!
             </div>
           ) : (
-            filteredTasks.hash ? null : filteredTasks.map((task) => (
+            filteredTasks.map((task) => (
               <div
                 key={task.id}
-                className="bg-white/[0.03] backdrop-blur-xl border border-white/10 p-5 rounded-2xl flex flex-col justify-between hover:border-white/20 transition-all"
+                style={{ background: '#1e293b', border: '1px solid #334155', padding: '20px', borderRadius: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
               >
-                <div className="space-y-3">
-                  <div className="flex justify-between items-start">
-                    <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${getBadgeStyle(task.status)}`}>
-                      {task.status}
-                    </span>
-                  </div>
-                  <h4 className="text-base font-bold text-slate-100">{task.title}</h4>
-                  <p className="text-slate-400 text-sm leading-relaxed line-clamp-3">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <span style={{ 
+                    padding: '3px 10px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 'bold', width: 'fit-content',
+                    background: task.status === 'Completed' ? 'rgba(34, 197, 94, 0.15)' : task.status === 'In Progress' ? 'rgba(234, 179, 8, 0.15)' : 'rgba(100, 116, 139, 0.15)',
+                    color: task.status === 'Completed' ? '#4ade80' : task.status === 'In Progress' ? '#facc15' : '#cbd5e1'
+                  }}>
+                    {task.status}
+                  </span>
+                  <h4 style={{ fontSize: '1.1rem', fontWeight: 'bold', margin: 0, color: '#f8fafc' }}>{task.title}</h4>
+                  <p style={{ color: '#94a3b8', fontSize: '0.9rem', margin: 0 }}>
                     {task.description || 'No description provided.'}
                   </p>
                 </div>
                 
-                <div className="flex items-center gap-2 pt-4 mt-4 border-t border-white/10">
+                <div style={{ display: 'flex', gap: '8px' }}>
                   <button
                     onClick={() => handleEditClick(task)}
-                    className="flex-1 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
+                    style={{ background: 'rgba(59, 130, 246, 0.1)', color: '#60a5fa', border: '1px solid rgba(59, 130, 246, 0.2)', padding: '6px 14px', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '600' }}
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleDeleteClick(task.id)}
-                    className="flex-1 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
+                    style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '6px 14px', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '600' }}
                   >
                     Delete
                   </button>
